@@ -319,10 +319,11 @@ def main():
     if not opt["experiment_name"]:
         opt["experiment_name"] = f"{opt['fishertune_mode']}_{opt['domains']}_{int(time.time())}"
 
-    logger = ExperimentLogger(opt["log_dir"], opt["experiment_name"], opt)
-
-    # Load data
+    # Load data (this will modify opt["domains"] from string to list)
     task_gen_all, domain_id, all_domain_set = load_domain_data(opt)
+
+    # Now create logger after domains are properly parsed
+    logger = ExperimentLogger(opt["log_dir"], opt["experiment_name"], opt)
 
     # Create dataloaders
     train_domains = MetaDomain_Dataset(task_gen_all, num_negatives=opt["num_negative"],
