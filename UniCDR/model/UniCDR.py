@@ -206,7 +206,7 @@ class UniCDR(nn.Module):
         share_user = F.dropout(share_user, self.dropout, training=self.training)
 
         if self.training and (self.warmup == 0):
-            random_label = (torch.arange(0, share_user.size(0), 1).cuda(share_user.device) + torch.randint(1, share_user.size(0), (1,)).item()) % share_user.size(0)
+            random_label = (torch.arange(0, share_user.size(0), 1, device=share_user.device) + torch.randint(1, share_user.size(0), (1,)).item()) % share_user.size(0)
 
             pos = self.dis_list[domain_id](specific_user,share_user).view(-1)
             neg = self.dis_list[domain_id](self.my_index_select(specific_user, random_label), share_user).view(-1)
