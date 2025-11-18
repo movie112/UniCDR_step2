@@ -184,14 +184,18 @@ class FisherTuneTrainer:
         """
         self.current_epoch = epoch
 
-        # Update FisherTune masks if enabled
+        # Update FisherTune masks if enabled (use online Fisher estimates)
         if self.ft_enabled and epoch >= self.ft_config.warmup_epochs:
+            # Copy online Fisher estimates to main FisherTune module
+            if self.use_online_fisher and self.efficient_fisher:
+                self.fishertune.fim = self.efficient_fisher.get_fisher()
             self.fishertune.update_parameter_masks(epoch)
 
         total_loss = []
         loss_list = [[] for _ in range(self.opt["num_domains"])]
 
-        iteration_num = 500  # Fixed number of iterations per epoch
+        # Use configurable iteration count (default 100, original 500)
+        iteration_num = self.opt.get("iterations_per_epoch", 100)
         self.model.train()
 
         for iteration in range(iteration_num):

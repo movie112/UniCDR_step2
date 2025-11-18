@@ -87,6 +87,10 @@ def create_arg_parser():
     parser.add_argument('--ft_noise_scale', type=float, default=0.01,
                         help='Noise scale for perturbation')
 
+    # Training efficiency
+    parser.add_argument('--iterations_per_epoch', type=int, default=100,
+                        help='Number of iterations per epoch (default 100, original 500)')
+
     # Experiment tracking
     parser.add_argument('--experiment_name', type=str, default='',
                         help='Name for this experiment run')
@@ -361,6 +365,9 @@ def main():
 
     # Create FisherTune configuration
     ft_config = create_fishertune_config(opt)
+
+    # Pass iteration config to opt
+    opt["iterations_per_epoch"] = opt.get("iterations_per_epoch", 100)
 
     # Initialize model with FisherTune
     mymodel = FisherTuneTrainer(opt, ft_config)
