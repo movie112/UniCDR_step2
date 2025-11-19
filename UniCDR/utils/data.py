@@ -211,7 +211,7 @@ class DomainTask(Dataset):
         neg_res = []
         for i in range(self.number_neg):
             while True:
-                r = random.sample(self.item_set, 1)[0]
+                r = random.choice(list(self.item_set))
                 if r not in self.positive_set[u]:
                     neg_res.append(r)
                     break
